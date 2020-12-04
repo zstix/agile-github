@@ -1,0 +1,7 @@
+{
+    "schemaType": "LAUNCHER",
+    "id": "agile-github-launcher",
+    "displayName": "AgileGithubLauncher",
+    "description": "Describe me",
+    "rootNerdletId": "agile-github-nerdlet"
+}

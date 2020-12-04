@@ -1,0 +1,30 @@
+{
+  "private": true,
+  "name": "agile-github",
+  "version": "1.22.1",
+  "author": "Zack Stickles<zstickles@newrelic.com>",
+  "scripts": {
+    "start": "nr1 nerdpack:serve",
+    "test": "exit 0"
+  },
+  "nr1": {
+    "uuid": "ea9d1354-f963-464d-b9f0-37d695f36efe"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zstix/agile-github"
+  },
+  "bugs": {
+    "url": "https://github.com/zstix/agile-github/issues"
+  },
+  "dependencies": {
+    "prop-types": "^15.6.2",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "not ie < 11",
+    "not dead"
+  ]
+}
