@@ -1,9 +1,5 @@
-import React from 'react';
+import React from "react";
 
-// https://docs.newrelic.com/docs/new-relic-programmable-platform-introduction
+const App = () => <div>Hello, Agile GitHub!</div>;
 
-export default class AgileGithubNerdletNerdlet extends React.Component {
-    render() {
-        return <h1>Hello, agile-github-nerdlet Nerdlet!</h1>;
-    }
-}
+export default App;
