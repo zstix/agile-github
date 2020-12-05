@@ -5,3 +5,7 @@ node_modules/
 *.swp
 *.env
 .DS_Store
+
+src/clover.xml
+src/coverage-final.json
+src/lcov*

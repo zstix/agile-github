@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nr1 nerdpack:serve",
     "test": "jest",
-    "test:watch": "yarn test --watch"
+    "test:watch": "yarn test --watch",
+    "test:cover": "yarn test --coverage --coverageDirectory src"
   },
   "nr1": {
     "uuid": "ea9d1354-f963-464d-b9f0-37d695f36efe"
