@@ -5,7 +5,8 @@
   "author": "Zack Stickles<zstickles@newrelic.com>",
   "scripts": {
     "start": "nr1 nerdpack:serve",
-    "test": "exit 0"
+    "test": "jest",
+    "test:watch": "yarn test --watch"
   },
   "nr1": {
     "uuid": "ea9d1354-f963-464d-b9f0-37d695f36efe"
@@ -26,5 +27,9 @@
     "last 2 versions",
     "not ie < 11",
     "not dead"
-  ]
+  ],
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.12.1",
+    "jest": "^26.6.3"
+  }
 }
