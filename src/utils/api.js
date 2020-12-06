@@ -1,8 +1,10 @@
+import { QUERY } from "../constants";
+
 const API_URL = "https://github.com/api/graphql";
 
+// HTTP headers, including a feature flag for project column events
 const HEADERS = {
   "Content-Type": "application/json",
-  // feature flag for project column events
   Accept: "application/vnd.github.starfox-preview+json",
 };
 
@@ -15,7 +17,8 @@ export const getIssues = async (owner, repo, milestone, token) => {
   if (!valid) throw new Error("Valid GitHub token not provided");
 
   const headers = { ...HEADERS, Authorization: `bearer ${token}` };
-  const body = JSON.stringify({ query: "foobar" });
+  const variables = { owner, repo, milestone };
+  const body = JSON.stringify({ query: QUERY.GET_ISSUES, variables });
   const options = { method: "post", headers, body };
 
   try {

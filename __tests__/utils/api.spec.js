@@ -1,5 +1,6 @@
 import { getIssues } from "../../src/utils/api";
 import { OWNER, REPO, TOKEN, MILESTONE } from "../../__mocks__/data";
+import { QUERY } from "../../src/constants";
 
 describe("getIssues", () => {
   describe("Parameters", () => {
@@ -48,7 +49,7 @@ describe("getIssues", () => {
     });
 
     it("should query the GitHub API with correct headers", async () => {
-      expect.assertions(3);
+      expect.assertions(2);
 
       const headers = {
         "Content-Type": "application/json",
@@ -61,7 +62,6 @@ describe("getIssues", () => {
 
       expect(options.headers).toEqual(headers);
       expect(options.method).toEqual("post");
-      expect(options.body).not.toBeUndefined();
     });
 
     it("should throw an error if the HTTP call fails", async () => {
@@ -72,6 +72,38 @@ describe("getIssues", () => {
       await expect(getIssues(OWNER, REPO, MILESTONE, TOKEN)).rejects.toEqual(
         error
       );
+    });
+  });
+
+  describe("GraphQL", () => {
+    beforeAll(() => {
+      global.fetch = jest.fn();
+    });
+
+    it("should send the correct query", async () => {
+      expect.assertions(3);
+
+      await getIssues(OWNER, REPO, MILESTONE, TOKEN);
+      const { body } = global.fetch.mock.calls[0][1];
+      const { query } = JSON.parse(body);
+
+      expect(body).not.toBeUndefined();
+      expect(query).not.toBeUndefined();
+      expect(query).toEqual(QUERY.GET_ISSUES);
+    });
+
+    it("should send the correct variables", async () => {
+      expect.assertions(5);
+
+      await getIssues(OWNER, REPO, MILESTONE, TOKEN);
+      const { body } = global.fetch.mock.calls[0][1];
+      const { variables } = JSON.parse(body);
+
+      expect(body).not.toBeUndefined();
+      expect(variables).not.toBeUndefined();
+      expect(variables.owner).toEqual(OWNER);
+      expect(variables.repo).toEqual(REPO);
+      expect(variables.milestone).toEqual(MILESTONE);
     });
   });
 });
