@@ -39,16 +39,20 @@ describe("getIssues", () => {
     });
 
     it("should query the GitHub API with correct headers", async () => {
-      expect.assertions(1);
+      expect.assertions(3);
 
       const headers = {
         "Content-Type": "application/json",
+        Accept: "application/vnd.github.starfox-preview+json",
         Authorization: `bearer ${TOKEN}`,
       };
 
       await getIssues(OWNER, REPO, TOKEN);
       const options = global.fetch.mock.calls[0][1];
+
       expect(options.headers).toEqual(headers);
+      expect(options.method).toEqual("post");
+      expect(options.body).not.toBeUndefined();
     });
 
     it("should throw an error if the HTTP call fails", async () => {
