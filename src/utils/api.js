@@ -6,11 +6,12 @@ const HEADERS = {
   Accept: "application/vnd.github.starfox-preview+json",
 };
 
-export const getIssues = async (owner, repo, token) => {
+export const getIssues = async (owner, repo, milestone, token) => {
   const valid = !!token && typeof token === "string" && token.length === 40;
 
   if (!owner) throw new Error("Repository owner not provided");
   if (!repo) throw new Error("Repository name not provided");
+  if (!milestone) throw new Error("Milestone number not provided");
   if (!valid) throw new Error("Valid GitHub token not provided");
 
   const headers = { ...HEADERS, Authorization: `bearer ${token}` };

@@ -1,12 +1,8 @@
 import { getIssues } from "../../src/utils/api";
-import { OWNER, REPO, TOKEN } from "../../__mocks__/data";
+import { OWNER, REPO, TOKEN, MILESTONE } from "../../__mocks__/data";
 
 describe("getIssues", () => {
-  describe("HTTP call", () => {
-    beforeAll(() => {
-      global.fetch = jest.fn();
-    });
-
+  describe("Parameters", () => {
     it("should throw an error if missing a repo owner", async () => {
       expect.assertions(1);
 
@@ -21,19 +17,32 @@ describe("getIssues", () => {
       await expect(getIssues(OWNER)).rejects.toEqual(error);
     });
 
+    it("should throw an error if missing a milestone number", async () => {
+      expect.assertions(1);
+
+      const error = new Error("Milestone number not provided");
+      await expect(getIssues(OWNER, REPO)).rejects.toEqual(error);
+    });
+
     it("should throw an error if missing a valid GH token", async () => {
       expect.assertions(3);
 
       const error = new Error("Valid GitHub token not provided");
-      await expect(getIssues(OWNER, REPO)).rejects.toEqual(error);
-      await expect(getIssues(OWNER, REPO)).rejects.toEqual(error);
-      await expect(getIssues(OWNER, REPO)).rejects.toEqual(error);
+      await expect(getIssues(OWNER, REPO, MILESTONE)).rejects.toEqual(error);
+      await expect(getIssues(OWNER, REPO, MILESTONE)).rejects.toEqual(error);
+      await expect(getIssues(OWNER, REPO, MILESTONE)).rejects.toEqual(error);
+    });
+  });
+
+  describe("HTTP call", () => {
+    beforeAll(() => {
+      global.fetch = jest.fn();
     });
 
     it("should query the GitHub API with correct url", async () => {
       expect.assertions(1);
 
-      await getIssues(OWNER, REPO, TOKEN);
+      await getIssues(OWNER, REPO, MILESTONE, TOKEN);
       const url = global.fetch.mock.calls[0][0];
       expect(url).toEqual("https://github.com/api/graphql");
     });
@@ -47,7 +56,7 @@ describe("getIssues", () => {
         Authorization: `bearer ${TOKEN}`,
       };
 
-      await getIssues(OWNER, REPO, TOKEN);
+      await getIssues(OWNER, REPO, MILESTONE, TOKEN);
       const options = global.fetch.mock.calls[0][1];
 
       expect(options.headers).toEqual(headers);
@@ -60,7 +69,9 @@ describe("getIssues", () => {
       global.fetch = jest.fn(() => Promise.reject());
 
       const error = new Error("Unable to fetch issues from GitHub");
-      await expect(getIssues(OWNER, REPO, TOKEN)).rejects.toEqual(error);
+      await expect(getIssues(OWNER, REPO, MILESTONE, TOKEN)).rejects.toEqual(
+        error
+      );
     });
   });
 });
