@@ -1,8 +1,14 @@
 import { getIssues } from "../../src/utils/api";
-import { OWNER, REPO, TOKEN, MILESTONE } from "../../__mocks__/data";
+import { OWNER, REPO, TOKEN, MILESTONE, RESPONSE } from "../../__mocks__/data";
 import { QUERY } from "../../src/constants";
 
+const RESP = { json: () => Promise.resolve(RESPONSE.GET_ISSUES) };
+
 describe("getIssues", () => {
+  beforeEach(() => {
+    global.fetch = jest.fn(() => Promise.resolve(RESP));
+  });
+
   describe("Parameters", () => {
     it("should throw an error if missing a repo owner", async () => {
       expect.assertions(1);
@@ -36,10 +42,6 @@ describe("getIssues", () => {
   });
 
   describe("HTTP call", () => {
-    beforeAll(() => {
-      global.fetch = jest.fn();
-    });
-
     it("should query the GitHub API with correct url", async () => {
       expect.assertions(1);
 
@@ -76,10 +78,6 @@ describe("getIssues", () => {
   });
 
   describe("GraphQL", () => {
-    beforeAll(() => {
-      global.fetch = jest.fn();
-    });
-
     it("should send the correct query", async () => {
       expect.assertions(3);
 
@@ -104,6 +102,31 @@ describe("getIssues", () => {
       expect(variables.owner).toEqual(OWNER);
       expect(variables.repo).toEqual(REPO);
       expect(variables.milestone).toEqual(MILESTONE);
+    });
+  });
+
+  describe("Response", () => {
+    it("should return the unwrapped data on success", async () => {
+      expect.assertions(3);
+
+      const data = await getIssues(OWNER, REPO, MILESTONE, TOKEN);
+      const json = await RESP.json();
+
+      expect(data).not.toBeUndefined();
+      expect(Object.keys(data)).not.toContain("data");
+      expect(data).toEqual(json.data);
+    });
+
+    it("should throw an error if GraphQL gives an error", async () => {
+      expect.assertions(1);
+
+      const resp = { json: () => Promise.resolve({ errors: "Yikes!" }) };
+      global.fetch = jest.fn(() => Promise.resolve(resp));
+
+      const error = new Error("Issue with GraphQL query");
+      await expect(getIssues(OWNER, REPO, MILESTONE, TOKEN)).rejects.toEqual(
+        error
+      );
     });
   });
 });

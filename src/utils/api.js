@@ -1,7 +1,9 @@
 import { QUERY } from "../constants";
 
+// TODO: constants
 const API_URL = "https://github.com/api/graphql";
 
+// TODO: constants
 // HTTP headers, including a feature flag for project column events
 const HEADERS = {
   "Content-Type": "application/json",
@@ -22,8 +24,15 @@ export const getIssues = async (owner, repo, milestone, token) => {
   const options = { method: "post", headers, body };
 
   try {
-    await fetch(API_URL, options);
-  } catch (e) {
-    throw new Error("Unable to fetch issues from GitHub");
+    const resp = await fetch(API_URL, options);
+    const json = await resp.json();
+
+    if (json.errors) throw new Error("Issue with GraphQL query");
+
+    return json.data;
+  } catch (error) {
+    throw new Error(
+      error ? error.message : "Unable to fetch issues from GitHub"
+    );
   }
 };
