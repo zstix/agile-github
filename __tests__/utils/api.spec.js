@@ -6,7 +6,9 @@ const data = {
   repository: {
     milestone: {
       title: "Test MMF Milestone",
-      issues: [],
+      issues: {
+        nodes: [],
+      },
     },
   },
 };

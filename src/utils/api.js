@@ -19,7 +19,7 @@ export const getIssues = async (owner, repo, milestone, token) => {
 
     if (json.errors) throw new Error("Issue with GraphQL query");
 
-    return json.data.repository.milestone.issues;
+    return json.data.repository.milestone.issues.nodes;
   } catch (error) {
     throw new Error(
       error ? error.message : "Unable to fetch issues from GitHub"
