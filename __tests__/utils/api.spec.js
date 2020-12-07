@@ -1,8 +1,17 @@
 import { getIssues } from "../../src/utils/api";
-import { OWNER, REPO, TOKEN, MILESTONE, RESPONSE } from "../../__mocks__/data";
+import { OWNER, REPO, TOKEN, MILESTONE } from "../../__mocks__/data";
 import { QUERY } from "../../src/constants";
 
-const RESP = { json: () => Promise.resolve(RESPONSE.GET_ISSUES) };
+const data = {
+  repository: {
+    milestone: {
+      title: "Test MMF Milestone",
+      issues: [],
+    },
+  },
+};
+
+const RESP = { json: () => Promise.resolve({ data }) };
 
 describe("getIssues", () => {
   beforeEach(() => {
@@ -107,14 +116,17 @@ describe("getIssues", () => {
 
   describe("Response", () => {
     it("should return the unwrapped data on success", async () => {
-      expect.assertions(3);
+      expect.assertions(7);
 
       const data = await getIssues(OWNER, REPO, MILESTONE, TOKEN);
-      const json = await RESP.json();
 
       expect(data).not.toBeUndefined();
       expect(Object.keys(data)).not.toContain("data");
-      expect(data).toEqual(json.data);
+      expect(Object.keys(data)).not.toContain("repository");
+      expect(Object.keys(data)).not.toContain("milestone");
+      expect(Object.keys(data)).not.toContain("issues");
+      expect(data).toBeInstanceOf(Array);
+      expect(data).toEqual([]);
     });
 
     it("should throw an error if GraphQL gives an error", async () => {
