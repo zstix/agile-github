@@ -20,6 +20,7 @@
     "url": "https://github.com/zstix/agile-github/issues"
   },
   "dependencies": {
+    "date-fns": "^2.16.1",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-dom": "^16.6.3"
