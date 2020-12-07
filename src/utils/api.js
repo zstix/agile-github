@@ -1,14 +1,4 @@
-import { QUERY } from "../constants";
-
-// TODO: constants
-const API_URL = "https://github.com/api/graphql";
-
-// TODO: constants
-// HTTP headers, including a feature flag for project column events
-const HEADERS = {
-  "Content-Type": "application/json",
-  Accept: "application/vnd.github.starfox-preview+json",
-};
+import { API_URL, QUERY, HEADERS } from "../constants";
 
 export const getIssues = async (owner, repo, milestone, token) => {
   const valid = !!token && typeof token === "string" && token.length === 40;
