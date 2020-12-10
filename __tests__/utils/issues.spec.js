@@ -1,5 +1,5 @@
 import { getPointsForMilestone } from "../../src/utils/issues";
-import { OWNER, REPO, TOKEN, MILESTONE } from "../../__mocks__/data";
+import { VALID_ARGS } from "../../__mocks__/data";
 
 const mockEvents = (data) =>
   data.map((d) => ({
@@ -56,40 +56,54 @@ const ISSUES_SIMPLE = [
 ];
 
 describe("getPointsForMilestone", () => {
-  describe("Return format", () => {
-    beforeEach(() => {
-      mockWithResponse(ISSUES_SIMPLE);
-    });
+  beforeEach(() => {
+    mockWithResponse(ISSUES_SIMPLE);
+  });
 
+  describe("Return format", () => {
     it("should return an array", async () => {
       expect.assertions(1);
 
-      const data = await getPointsForMilestone(OWNER, REPO, MILESTONE, TOKEN);
+      const days = await getPointsForMilestone(...VALID_ARGS);
 
-      expect(data).toBeInstanceOf(Array);
+      expect(days).toBeInstanceOf(Array);
     });
 
     it("should return an array of days", async () => {
       expect.assertions(3);
 
-      const data = await getPointsForMilestone(OWNER, REPO, MILESTONE, TOKEN);
+      const days = await getPointsForMilestone(...VALID_ARGS);
 
-      expect(data).toHaveLength(5);
-      expect(data[0].date).toEqual(new Date("2020-08-24"));
-      expect(data[4].date).toEqual(new Date("2020-08-28"));
+      expect(days).toHaveLength(5);
+      expect(days[0].date).toEqual(new Date("2020-08-24"));
+      expect(days[4].date).toEqual(new Date("2020-08-28"));
     });
 
     it("should return an array of columns for each day", async () => {
       expect.assertions(5);
 
-      const data = await getPointsForMilestone(OWNER, REPO, MILESTONE, TOKEN);
-      const { columns } = data[0];
+      const [first] = await getPointsForMilestone(...VALID_ARGS);
+      const { columns } = first;
 
       expect(columns).toBeInstanceOf(Array);
       expect(columns[0].label).toEqual("To Do");
       expect(columns[1].label).toEqual("In Progress");
       expect(columns[2].label).toEqual("For Review");
       expect(columns[3].label).toEqual("Done");
+    });
+  });
+
+  describe("data", () => {
+    it("should calulate the correct number of points per day", async () => {
+      expect.assertions(1);
+
+      const [first] = await getPointsForMilestone(...VALID_ARGS);
+      const [todo, inProgress, forReview, done] = first.columns;
+
+      expect(todo.points).toEqual(5);
+      expect(inProgress.points).toEqual(1);
+      expect(forReview.points).toEqual(0);
+      expect(done.points).toEqual(0);
     });
   });
 });
