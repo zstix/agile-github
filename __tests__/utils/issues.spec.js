@@ -95,7 +95,7 @@ describe("getPointsForMilestone", () => {
 
   describe("data", () => {
     it("should calulate the correct number of points per day", async () => {
-      expect.assertions(1);
+      expect.assertions(4);
 
       const [first] = await getPointsForMilestone(...VALID_ARGS);
       const [todo, inProgress, forReview, done] = first.columns;
