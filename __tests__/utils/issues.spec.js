@@ -105,5 +105,52 @@ describe("getPointsForMilestone", () => {
       expect(forReview.points).toEqual(0);
       expect(done.points).toEqual(0);
     });
+
+    it("should handle multiple column movements in one day", async () => {
+      expect.assertions(2);
+
+      const resp = [
+        {
+          name: "Foo Bar",
+          points: 1,
+          events: [
+            { from: "To Do", to: "In Progress", date: "08-24" },
+            { from: "In Progress", to: "For Review", date: "08-24" },
+          ],
+        },
+      ];
+      mockWithResponse(resp);
+
+      const [first] = await getPointsForMilestone(...VALID_ARGS);
+      const inProgress = first.columns[1];
+      const forReview = first.columns[2];
+
+      expect(inProgress.points).toEqual(0);
+      expect(forReview.points).toEqual(1);
+    });
+
+    it("should handle tickets moving in reverse", async () => {
+      expect.assertions(2);
+
+      const resp = [
+        {
+          name: "Foo Bar",
+          points: 1,
+          events: [
+            { from: "To Do", to: "In Progress", date: "08-24" },
+            { from: "In Progress", to: "For Review", date: "08-24" },
+            { from: "For Review", to: "In Progress", date: "08-24" },
+          ],
+        },
+      ];
+      mockWithResponse(resp);
+
+      const [first] = await getPointsForMilestone(...VALID_ARGS);
+      const inProgress = first.columns[1];
+      const forReview = first.columns[2];
+
+      expect(inProgress.points).toEqual(1);
+      expect(forReview.points).toEqual(0);
+    });
   });
 });
