@@ -1,6 +1,42 @@
 import { API_URL, QUERY, HEADERS } from "../constants";
 
-export const getIssues = async (owner, repo, milestone, token) => {
+interface TimelineItemNode {
+  previousProjectColumnName: string;
+  projectColumnName: string;
+  createdAt: string;
+};
+
+export interface Issue {
+  title: string;
+  labels: {
+    nodes: {
+      name: string
+    }[];
+  };
+  timelineItems: {
+    nodes: TimelineItemNode[]
+  }
+};
+
+interface GetIssuesResponse {
+  data: {
+    repository: {
+      milestone: {
+        issues: {
+          nodes: Issue[];
+        }
+      }
+    }
+  },
+  errors: any;
+};
+
+export const getIssues = async (
+  owner: string,
+  repo: string,
+  milestone: number,
+  token: string
+): Promise<Issue[]> => {
   const valid = !!token && typeof token === "string" && token.length === 40;
 
   if (!owner) throw new Error("Repository owner not provided");
@@ -15,7 +51,7 @@ export const getIssues = async (owner, repo, milestone, token) => {
 
   try {
     const resp = await fetch(API_URL, options);
-    const json = await resp.json();
+    const json: GetIssuesResponse = await resp.json();
 
     if (json.errors) throw new Error("Issue with GraphQL query");
 
