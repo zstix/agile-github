@@ -1,3 +1,4 @@
+import fetch from 'node-fetch';
 import { API_URL, QUERY, HEADERS } from "../constants";
 
 export interface TimelineItemNode {
