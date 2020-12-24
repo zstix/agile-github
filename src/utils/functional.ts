@@ -1,12 +1,13 @@
-// TODO: figure out how to type this correctly (or pull in Ramda)
-export const curry = (fn: Function): Function =>
-  (...args: any[]) => fn.bind(null, ...args);
+const getProp = <T, K extends keyof T>(key: K, obj: T) => obj[key];
 
-export const prop = curry((k: string, x: Object): any => x[k]);
-
-export const get = curry((str, x) =>
-  str.split(".").reduce((acc, k) => acc[k], x)
-);
+const getDeepProp = (path: string, obj: any) =>
+  path.split('.').reduce((val, key) => val[key], obj)
 
 export const range = (a: number, b?: number): number[] =>
   b ? [...Array(b).keys()].slice(a) : [...Array(a).keys()];
+
+export const prop = <T, K extends keyof T>(key: K) => (obj: T) =>
+  getProp(key, obj);
+
+export const get = (path: string) => (obj: any) =>
+  getDeepProp(path, obj);

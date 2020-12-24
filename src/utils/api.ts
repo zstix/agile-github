@@ -1,6 +1,6 @@
 import { API_URL, QUERY, HEADERS } from "../constants";
 
-interface TimelineItemNode {
+export interface TimelineItemNode {
   previousProjectColumnName: string;
   projectColumnName: string;
   createdAt: string;

@@ -7,7 +7,7 @@ import {
   parseISO,
 } from "date-fns";
 import { prop, get, range } from "./functional";
-import { getIssues, Issue } from "./api";
+import { getIssues, Issue, TimelineItemNode } from "./api";
 
 const DEFAULT_COLUMNS = ["To Do", "In Progress", "For Review", "Done"];
 
@@ -70,8 +70,8 @@ export const getPointsForMilestone = async (
 ): Promise<PointsForDay[]> => {
   try {
     const issues = await getIssues(owner, repo, milestone, token);
-    const events = issues.flatMap(get("timelineItems.nodes"));
-    const dates: string[] = events.map(prop("createdAt"));
+    const events: TimelineItemNode[] = issues.flatMap(get("timelineItems.nodes"));
+    const dates = events.map(prop("createdAt"));
     const columns = userColumns || DEFAULT_COLUMNS;
 
     return getDateRange(dates).map(getPointsForDay(issues, columns));
