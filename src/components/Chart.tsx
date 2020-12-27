@@ -1,4 +1,5 @@
 import React from 'react';
+import GitHubContext from '../GitHubContext';
 import { VictoryStack, VictoryArea } from 'victory';
 import { prop } from '../utils/functional';
 
@@ -73,12 +74,21 @@ class Chart extends React.Component<null, ChartState> {
     // TODO: better colors
     // TODO: dynamic columns
     return (
-      <VictoryStack labels={todo.map(prop('x'))}>
-        <VictoryArea data={todo} />
-        <VictoryArea data={inProgress} />
-        <VictoryArea data={forReview} />
-        <VictoryArea data={done} />
-      </VictoryStack>
+      <GitHubContext.Consumer>
+        {({ loading, data, error }) => {
+          console.log('loading', loading);
+          console.log(data);
+          console.log(error);
+          return (
+            <VictoryStack labels={todo.map(prop('x'))}>
+              <VictoryArea data={todo} />
+              <VictoryArea data={inProgress} />
+              <VictoryArea data={forReview} />
+              <VictoryArea data={done} />
+            </VictoryStack>
+          );
+        }}
+      </GitHubContext.Consumer>
     );
   }
 }

@@ -11,7 +11,7 @@ import { getIssues, Issue, TimelineItemNode } from "./api";
 
 const DEFAULT_COLUMNS = ["To Do", "In Progress", "For Review", "Done"];
 
-interface PointsForDay {
+export interface PointsForDay {
   date: Date;
   columns: {
     label: string;
