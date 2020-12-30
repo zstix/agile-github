@@ -1,4 +1,4 @@
-export const API_URL = "https://github.com/api/graphql";
+export const API_URL = "https://api.github.com/graphql";
 
 // HTTP headers, including a feature flag for project column events
 export const HEADERS = {
@@ -38,3 +38,5 @@ query getIssues($owner: String!, $repo: String!, $milestone: Int!) {
 export const QUERY = {
   GET_ISSUES,
 };
+
+export const DEFAULT_COLUMNS = ["To do", "In progress", "For review", "Done"];

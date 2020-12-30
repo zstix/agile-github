@@ -39,10 +39,8 @@ export class GitHubContextProvider extends React.Component<GitHubContextProps, G
       const data = await getPointsForMilestone(owner, repo, milestone, this._token);
       this.setState({ data, loading: false });
     } catch (error) {
-      console.log('ooooooooooooooooops');
-      throw new Error(error);
-      console.error(`Unable to fetch data from GitHub: ${err}`, err);
-      this.setState({ loading: false, error: err });
+      this.setState({ loading: false });
+      throw new Error(`Unable to fetch data from GitHub: ${error}`);
     }
   }
 

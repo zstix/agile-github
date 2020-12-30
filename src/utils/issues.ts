@@ -8,8 +8,7 @@ import {
 } from "date-fns";
 import { prop, get, range } from "./functional";
 import { getIssues, Issue, TimelineItemNode } from "./api";
-
-const DEFAULT_COLUMNS = ["To Do", "In Progress", "For Review", "Done"];
+import { DEFAULT_COLUMNS } from '../constants';
 
 export interface PointsForDay {
   date: Date;
@@ -71,11 +70,11 @@ export const getPointsForMilestone = async (
   try {
     const issues = await getIssues(owner, repo, milestone, token);
     const events: TimelineItemNode[] = issues.flatMap(get("timelineItems.nodes"));
-    const dates = events.map(prop("createdAt"));
+    const dates = events.map(prop("createdAt")).filter(Boolean);
     const columns = userColumns || DEFAULT_COLUMNS;
 
     return getDateRange(dates).map(getPointsForDay(issues, columns));
-  } catch (e) {
-    throw new Error("Unable to calculate points for milestone.");
+  } catch (error) {
+    throw new Error(`Unable to calculate points for milestone: ${error}`);
   }
 };

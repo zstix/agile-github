@@ -1,4 +1,5 @@
 import React from 'react';
+import { Spinner } from 'nr1';
 import GitHubContext from '../GitHubContext';
 import { VictoryStack, VictoryArea } from 'victory';
 import { prop } from '../utils/functional';
@@ -75,10 +76,14 @@ class Chart extends React.Component<null, ChartState> {
     // TODO: dynamic columns
     return (
       <GitHubContext.Consumer>
-        {({ loading, data, error }) => {
+        {({ loading, data }) => {
+          if (loading) {
+            return <Spinner />;
+          }
+
           console.log('loading', loading);
           console.log(data);
-          console.log(error);
+
           return (
             <VictoryStack labels={todo.map(prop('x'))}>
               <VictoryArea data={todo} />
