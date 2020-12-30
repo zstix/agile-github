@@ -28,18 +28,19 @@ const transformData = (data: PointsForDay[]): Record<string, DataPoint[]> => {
 }
 
 // TODO: rename to burndown
-const Chart: React.FC = () => (
+const BurndownChart: React.FC = () => (
   <GitHubContext.Consumer>
     {({ loading, data }) => {
       if (loading) return <Spinner />;
 
       const labels = data.map(prop('date')).map(format('M/d'));
-      const transformedData = transformData(data);
+      const burndownData = transformData(data);
+      console.log(burndownData);
 
       // TODO: fix the busted chart
       return (
         <VictoryStack labels={labels}>
-          {Object.entries(transformedData).map(([label, dataPoints]) => (
+          {Object.entries(burndownData).map(([label, dataPoints]) => (
             <VictoryArea key={label} data={dataPoints} />
           ))}
         </VictoryStack>
@@ -48,4 +49,4 @@ const Chart: React.FC = () => (
   </GitHubContext.Consumer>
 );
 
-export default Chart;
+export default BurndownChart;
