@@ -3,14 +3,8 @@ import ErrorBoundary from '../../src/ErrorBoundary';
 import { GitHubContextProvider } from '../../src/GitHubContext';
 import Chart from '../../src/components/Chart';
 
-interface AppProps {
-  utils: {
-    noticeError: (error: Error, attributes?: any) => void;
-  }
-}
-
-const App: React.FC<AppProps> = (props) => (
-  <ErrorBoundary noticeError={props.utils.noticeError}>
+const App: React.FC = () => (
+  <ErrorBoundary>
     <GitHubContextProvider token="abc123">
       <h1>Agile GitHub</h1>
       <Chart />
