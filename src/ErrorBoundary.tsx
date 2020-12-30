@@ -30,9 +30,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
   render() {
     const { error, info } = this.state;
 
-    if (!error) {
-      return this.props.children;
-    }
+    if (!error) return this.props.children;
 
     return (
       <>

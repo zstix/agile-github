@@ -8,7 +8,7 @@ interface GitHubContextProps {
 
 interface GitHubContextState {
   loading: boolean;
-  error: null | Error;
+  error: Error;
   data: PointsForDay[];
 };
 
@@ -39,7 +39,7 @@ export class GitHubContextProvider extends React.Component<GitHubContextProps, G
       const data = await getPointsForMilestone(owner, repo, milestone, this._token);
       this.setState({ data, loading: false });
     } catch (error) {
-      this.setState({ loading: false });
+      this.setState({ loading: false, error });
       throw new Error(`Unable to fetch data from GitHub: ${error}`);
     }
   }
