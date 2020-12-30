@@ -45,6 +45,8 @@ export class GitHubContextProvider extends React.Component<GitHubContextProps, G
   }
 
   render() {
+    if (this.state.error) throw this.state.error;
+
     return (
       <GitHubContext.Provider value={this.state}>
         {this.props.children}

@@ -76,11 +76,9 @@ class Chart extends React.Component<null, ChartState> {
     // TODO: dynamic columns
     return (
       <GitHubContext.Consumer>
-        {({ loading, data, error }) => {
+        {({ loading, data }) => {
           if (loading) return <Spinner />;
-          if (error) throw error;
 
-          console.log('loading', loading);
           console.log(data);
 
           return (
