@@ -14,9 +14,7 @@ interface GitHubContextState {
 
 const GitHubContext = React.createContext<GitHubContextState>(null);
 
-export class GitHubContextProvider extends React.Component
-  <GitHubContextProps, GitHubContextState>
-{
+export class GitHubContextProvider extends React.Component<GitHubContextProps, GitHubContextState> {
   private _token: string;
 
   constructor(props: GitHubContextProps) {
@@ -40,7 +38,9 @@ export class GitHubContextProvider extends React.Component
     try {
       const data = await getPointsForMilestone(owner, repo, milestone, this._token);
       this.setState({ data, loading: false });
-    } catch (err) {
+    } catch (error) {
+      console.log('ooooooooooooooooops');
+      throw new Error(error);
       console.error(`Unable to fetch data from GitHub: ${err}`, err);
       this.setState({ loading: false, error: err });
     }
