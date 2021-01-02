@@ -7,16 +7,8 @@ import {
   parseISO,
 } from "date-fns";
 import { prop, get, range } from "./functional";
-import { getIssues, Issue, TimelineItemNode } from "./api";
+import { getIssues, Issue } from "./api";
 import { DEFAULT_COLUMNS } from '../constants';
-
-export interface PointsForDay {
-  date: Date;
-  columns: {
-    label: string;
-    points: number;
-  }[];
-};
 
 const getDateRange = (dateStrings: string[]): Date[] => {
   const dates = dateStrings.map(str => parseISO(str));
@@ -33,7 +25,7 @@ const getPointsForIssue = ({ labels }: Issue) => {
 };
 
 const getPointsForDay = (issues: Issue[], columnNames: string[]) =>
-  (date: Date): PointsForDay => {
+  (date: Date): IGitHubData => {
     let columns = columnNames.map((label) => ({ label, points: 0 }));
 
     // TODO: use rduce to remove side-effects
@@ -61,15 +53,15 @@ const getPointsForDay = (issues: Issue[], columnNames: string[]) =>
  * particular day.
  */
 export const getPointsForMilestone = async (
-  owner: string,
-  repo: string,
-  milestone: number,
-  token: string,
-  userColumns?: string[]
-): Promise<PointsForDay[]> => {
+  config: IGitHubConfiguration & {
+    userColumns?: string[]
+  }
+): Promise<IGitHubData[]> => {
+  const { userColumns } = config;
+
   try {
-    const issues = await getIssues(owner, repo, milestone, token);
-    const events: TimelineItemNode[] = issues.flatMap(get("timelineItems.nodes"));
+    const issues = await getIssues(config);
+    const events: IGitHubTimelineItem[] = issues.flatMap(get("timelineItems.nodes"));
     const dates = events.map(prop("createdAt")).filter(Boolean);
     const columns = userColumns || DEFAULT_COLUMNS;
 

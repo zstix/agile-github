@@ -1,12 +1,6 @@
 import fetch from 'node-fetch';
 import { API_URL, QUERY, HEADERS } from "../constants";
 
-export interface TimelineItemNode {
-  previousProjectColumnName: string;
-  projectColumnName: string;
-  createdAt: string;
-};
-
 export interface Issue {
   title: string;
   labels: {
@@ -15,7 +9,7 @@ export interface Issue {
     }[];
   };
   timelineItems: {
-    nodes: TimelineItemNode[]
+    nodes: IGitHubTimelineItem[]
   }
 };
 
@@ -32,12 +26,8 @@ interface GetIssuesResponse {
   errors: any;
 };
 
-export const getIssues = async (
-  owner: string,
-  repo: string,
-  milestone: number,
-  token: string
-): Promise<Issue[]> => {
+export const getIssues = async (config: IGitHubConfiguration): Promise<Issue[]> => {
+  const { owner, repo, milestone, token } = config;
   const valid = !!token && typeof token === "string" && token.length === 40;
 
   if (!owner) throw new Error("Repository owner not provided");

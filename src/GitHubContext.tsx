@@ -1,5 +1,5 @@
 import React from 'react';
-import { PointsForDay, getPointsForMilestone } from './utils/issues';
+import { getPointsForMilestone } from './utils/issues';
 
 interface IGitHubContextProps {
   children: React.ReactNode;
@@ -8,7 +8,7 @@ interface IGitHubContextProps {
 interface IGitHubContextState {
   loading: boolean;
   error: Error;
-  data: PointsForDay[];
+  data: IGitHubData[];
   fetchData: (options: IGitHubConfiguration) => Promise<void>;
 };
 
@@ -28,12 +28,11 @@ export class GitHubContextProvider extends React.Component<IGitHubContextProps, 
     };
   }
 
-  async fetchData(options: IGitHubConfiguration): Promise<void> {
-    const { owner, repo, milestone, token } = options;
+  async fetchData(config: IGitHubConfiguration): Promise<void> {
     this.setState({ loading: true });
 
     try {
-      const data = await getPointsForMilestone(owner, repo, milestone, token);
+      const data = await getPointsForMilestone(config);
       this.setState({ data, loading: false });
     } catch (error) {
       this.setState({ loading: false, error });
