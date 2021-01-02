@@ -1,42 +1,39 @@
 import React from 'react';
 import { PointsForDay, getPointsForMilestone } from './utils/issues';
 
-interface GitHubContextProps {
+interface IGitHubContextProps {
   children: React.ReactNode;
-  token: string;
 };
 
-interface GitHubContextState {
+interface IGitHubContextState {
   loading: boolean;
   error: Error;
   data: PointsForDay[];
+  fetchData: (options: IGitHubConfiguration) => Promise<void>;
 };
 
-const GitHubContext = React.createContext<GitHubContextState>(null);
+const GitHubContext = React.createContext<IGitHubContextState>(null);
 
-export class GitHubContextProvider extends React.Component<GitHubContextProps, GitHubContextState> {
-  private _token: string;
-
-  constructor(props: GitHubContextProps) {
+export class GitHubContextProvider extends React.Component<IGitHubContextProps, IGitHubContextState> {
+  constructor(props: IGitHubContextProps) {
     super(props);
 
-    this._token = props.token;
+    this.fetchData = this.fetchData.bind(this);
 
     this.state = {
-      loading: true,
+      loading: false,
       error: null,
       data: [],
+      fetchData: this.fetchData,
     };
   }
 
-  async componentDidMount(): Promise<void> {
-    // TODO: accept as props?
-    const owner = "newrelic";
-    const repo = "docs-website";
-    const milestone = 1;
+  async fetchData(options: IGitHubConfiguration): Promise<void> {
+    const { owner, repo, milestone, token } = options;
+    this.setState({ loading: true });
 
     try {
-      const data = await getPointsForMilestone(owner, repo, milestone, this._token);
+      const data = await getPointsForMilestone(owner, repo, milestone, token);
       this.setState({ data, loading: false });
     } catch (error) {
       this.setState({ loading: false, error });

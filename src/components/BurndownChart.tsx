@@ -32,6 +32,7 @@ const BurndownChart: React.FC = () => (
   <GitHubContext.Consumer>
     {({ loading, data }) => {
       if (loading) return <Spinner />;
+      if (!data.length) return null;
 
       const labels = data.map(prop('date')).map(format('M/d'));
       const burndownData = transformData(data);
